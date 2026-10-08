@@ -255,9 +255,9 @@
     },
 {
         "author": "dafeiyu",
-        "comment": "BS2 勇剑沃柏尔（#310）：究极三段斩 ×5 + 贾巴沃克特攻改为泛用",
+        "comment": "BS2 勇剑沃柏尔（#310）：究极三段斩 ×10 + 贾巴沃克特攻改为泛用",
         "key": "module ATTACK_CHANGE\r\n",
-        "value": "module DataManager\r\n  class << self\r\n    alias bs2_load_normal_database load_normal_database\r\n    def load_normal_database\r\n      bs2_load_normal_database\r\n      $data_skills[357].damage.formula = 'a.atk * 20 - b.def * 2'\r\n      $data_skills[358].damage.formula = 'a.atk * 25'\r\n      $data_skills[359].damage.formula = 'a.atk * 20 - b.def * 2'\r\n    end\r\n  end\r\nend\r\nclass Game_Battler\r\n  alias bs2_any_enemy_element_rate element_rate\r\n  def element_rate(element_id)\r\n    return 2.0 if element_id == 14 && is_a?(Game_Enemy)\r\n    bs2_any_enemy_element_rate(element_id)\r\n  end\r\nend\r\nmodule ATTACK_CHANGE\r\n"
+        "value": "module DataManager\r\n  class << self\r\n    alias bs2_load_normal_database load_normal_database\r\n    def load_normal_database\r\n      bs2_load_normal_database\r\n      $data_skills[357].damage.formula = 'a.atk * 40 - b.def * 2'\r\n      $data_skills[358].damage.formula = 'a.atk * 50'\r\n      $data_skills[359].damage.formula = 'a.atk * 40 - b.def * 2'\r\n    end\r\n  end\r\nend\r\nclass Game_Battler\r\n  alias bs2_any_enemy_element_rate element_rate\r\n  def element_rate(element_id)\r\n    return 2.0 if element_id == 14 && is_a?(Game_Enemy)\r\n    bs2_any_enemy_element_rate(element_id)\r\n  end\r\nend\r\nmodule ATTACK_CHANGE\r\n"
     },
         {
             "author": "joiplay",
