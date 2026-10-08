@@ -251,13 +251,13 @@
         "author": "dafeiyu",
         "comment": "BS2 外来者之魂（#84）：全属性永久追加",
         "key": "def use_item(item)\r\n    pay_skill_cost(item) if item.is_a?(RPG::Skill)\r\n",
-        "value": "def use_item(item)\r\n    if item.is_a?(RPG::Item) && item.id == 84\r\n      add_param(0, 5000000)\r\n      add_param(1, 1000000)\r\n      add_param(2, 500000)\r\n      add_param(3, 500000)\r\n      add_param(4, 500000)\r\n      add_param(5, 500000)\r\n      add_param(6, 500000)\r\n      add_param(7, 500000)\r\n      print \"BS2_SOUL_FIRED\\n\"\r\n    end\r\n    pay_skill_cost(item) if item.is_a?(RPG::Skill)\r\n"
+        "value": "def use_item(item)\r\n    if item.is_a?(RPG::Item) && item.id == 84 && defined?($data_system) && $data_system && $data_system.game_title.to_s =~ /BLACK ?SOULS/i\r\n      add_param(0, 5000000)\r\n      add_param(1, 1000000)\r\n      add_param(2, 500000)\r\n      add_param(3, 500000)\r\n      add_param(4, 500000)\r\n      add_param(5, 500000)\r\n      add_param(6, 500000)\r\n      add_param(7, 500000)\r\n      print \"BS2_SOUL_FIRED\\n\"\r\n    end\r\n    pay_skill_cost(item) if item.is_a?(RPG::Skill)\r\n"
     },
 {
         "author": "dafeiyu",
         "comment": "BS2 勇剑沃柏尔（#310）：究极三段斩 ×10 + 贾巴沃克特攻改为泛用",
         "key": "module ATTACK_CHANGE\r\n",
-        "value": "module DataManager\r\n  class << self\r\n    alias bs2_load_normal_database load_normal_database\r\n    def load_normal_database\r\n      bs2_load_normal_database\r\n      $data_skills[357].damage.formula = 'a.atk * 40 - b.def * 2'\r\n      $data_skills[358].damage.formula = 'a.atk * 50'\r\n      $data_skills[359].damage.formula = 'a.atk * 40 - b.def * 2'\r\n    end\r\n  end\r\nend\r\nclass Game_Battler\r\n  alias bs2_any_enemy_element_rate element_rate\r\n  def element_rate(element_id)\r\n    return 2.0 if element_id == 14 && is_a?(Game_Enemy)\r\n    bs2_any_enemy_element_rate(element_id)\r\n  end\r\nend\r\nmodule ATTACK_CHANGE\r\n"
+        "value": "$bs2_patch_on = false\r\nmodule BS2Patch\r\n  def self.game?\r\n    (defined?($data_system) && $data_system &&\r\n     $data_system.game_title.to_s =~ /BLACK ?SOULS/i) ? true : false\r\n  end\r\nend\r\nmodule DataManager\r\n  class << self\r\n    alias bs2_load_normal_database load_normal_database\r\n    def load_normal_database\r\n      bs2_load_normal_database\r\n      if BS2Patch.game?\r\n        $bs2_patch_on = true\r\n        $data_skills[357].damage.formula = 'a.atk * 40 - b.def * 2' if $data_skills[357]\r\n        $data_skills[358].damage.formula = 'a.atk * 50' if $data_skills[358]\r\n        $data_skills[359].damage.formula = 'a.atk * 40 - b.def * 2' if $data_skills[359]\r\n      end\r\n    end\r\n  end\r\nend\r\nclass Game_Battler\r\n  alias bs2_any_enemy_element_rate element_rate\r\n  def element_rate(element_id)\r\n    return 2.0 if $bs2_patch_on && element_id == 14 && is_a?(Game_Enemy)\r\n    bs2_any_enemy_element_rate(element_id)\r\n  end\r\nend\r\nmodule ATTACK_CHANGE\r\n"
     },
         {
             "author": "joiplay",
