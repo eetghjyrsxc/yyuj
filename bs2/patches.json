@@ -250,8 +250,8 @@
 {
         "author": "dafeiyu",
         "comment": "BS2 外来者之魂（#84）：全属性永久追加",
-        "key": "def item_apply(user, item)\r\n    @result.clear\r\n",
-        "value": "def item_apply(user, item)\r\n    if item.is_a?(RPG::Item) && item.id == 84\r\n      add_param(0, 5000000)\r\n      add_param(1, 1000000)\r\n      add_param(2, 500000)\r\n      add_param(3, 500000)\r\n      add_param(4, 500000)\r\n      add_param(5, 500000)\r\n      add_param(6, 500000)\r\n      add_param(7, 500000)\r\n    end\r\n    @result.clear\r\n"
+        "key": "def use_item(item)\r\n    pay_skill_cost(item) if item.is_a?(RPG::Skill)\r\n",
+        "value": "def use_item(item)\r\n    if item.is_a?(RPG::Item) && item.id == 84\r\n      add_param(0, 5000000)\r\n      add_param(1, 1000000)\r\n      add_param(2, 500000)\r\n      add_param(3, 500000)\r\n      add_param(4, 500000)\r\n      add_param(5, 500000)\r\n      add_param(6, 500000)\r\n      add_param(7, 500000)\r\n      print \"BS2_SOUL_FIRED\\n\"\r\n    end\r\n    pay_skill_cost(item) if item.is_a?(RPG::Skill)\r\n"
     },
         {
             "author": "joiplay",
