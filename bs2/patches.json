@@ -199,54 +199,60 @@
         }
     ],
     "rpgm": [
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：最大HP",
-            "key": "A_MHP = 999999",
-            "value": "A_MHP = 200000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：最大MP",
-            "key": "A_MMP = 99999",
-            "value": "A_MMP = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：攻击力",
-            "key": "A_ATK = 9999",
-            "value": "A_ATK = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：防御力",
-            "key": "A_DEF = 9999",
-            "value": "A_DEF = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：魔法力",
-            "key": "A_MAT = 9999",
-            "value": "A_MAT = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：魔法防御",
-            "key": "A_MDF = 9999",
-            "value": "A_MDF = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：敏捷性",
-            "key": "A_AGI = 9999",
-            "value": "A_AGI = 12000000"
-        },
-        {
-            "author": "dafeiyu",
-            "comment": "BS2 玩家上限（第一步）：运气",
-            "key": "A_LUK = 9999",
-            "value": "A_LUK = 12000000"
-        },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：最大HP",
+        "key": "A_MHP = 999999",
+        "value": "A_MHP = 200000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：最大MP",
+        "key": "A_MMP = 99999",
+        "value": "A_MMP = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：攻击力",
+        "key": "A_ATK = 9999",
+        "value": "A_ATK = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：防御力",
+        "key": "A_DEF = 9999",
+        "value": "A_DEF = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：魔法力",
+        "key": "A_MAT = 9999",
+        "value": "A_MAT = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：魔法防御",
+        "key": "A_MDF = 9999",
+        "value": "A_MDF = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：敏捷性",
+        "key": "A_AGI = 9999",
+        "value": "A_AGI = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 玩家上限（第一步）：运气",
+        "key": "A_LUK = 9999",
+        "value": "A_LUK = 12000000"
+    },
+{
+        "author": "dafeiyu",
+        "comment": "BS2 外来者之魂（#84）：全属性永久追加",
+        "key": "def item_apply(user, item)\r\n    @result.clear\r\n",
+        "value": "def item_apply(user, item)\r\n    if item.is_a?(RPG::Item) && item.id == 84\r\n      add_param(0, 5000000)\r\n      add_param(1, 1000000)\r\n      add_param(2, 500000)\r\n      add_param(3, 500000)\r\n      add_param(4, 500000)\r\n      add_param(5, 500000)\r\n      add_param(6, 500000)\r\n      add_param(7, 500000)\r\n    end\r\n    @result.clear\r\n"
+    },
         {
             "author": "joiplay",
             "comment": "Replace other encodings with UTF-8",
