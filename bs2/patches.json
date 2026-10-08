@@ -1,0 +1,855 @@
+{
+    "construct": [
+        {
+            "author": "joiplay",
+            "comment": "Use on pointerdown instead of jquery's mousedown",
+            "key": ").mousedown(",
+            "value": ").on(\"pointerdown\","
+        },
+        {
+            "author": "joiplay",
+            "comment": "Use on pointerup instead of jquery's mouseup",
+            "key": ").mouseup(",
+            "value": ").on(\"pointerup\","
+        },
+        {
+            "author": "joiplay",
+            "comment": "Use on pointermove instead of jquery's mousemove",
+            "key": ").mousemove(",
+            "value": ").on(\"pointermove\","
+        },
+        {
+            "author": "joiplay",
+            "comment": "Use pointerdown instead of mousedown",
+            "key": "document.addEventListener(\"mousedown\"",
+            "value": "document.addEventListener(\"pointerdown\""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Hide compatibility layer",
+            "key": "this.isNWjs = ",
+            "value": "this.isNWjs = false && "
+        },
+        {
+            "author": "joiplay",
+            "comment": "pointerType must be mouse to make touch input work",
+            "key": "e[\"pointerType\"] !== \"mouse\"",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Use console.log instead of cr.logexport",
+            "key": "cr.logexport(",
+            "value": "console.log("
+        },
+        {
+            "author": "joiplay",
+            "comment": "Set mouseXcanvas and mouseYcanvas on mousedown",
+            "key": "this.buttonMap[info.which] = true;",
+            "value": "this.buttonMap[info.which] = true;var offset = this.runtime.isDomFree ? dummyoffset : jQuery(this.runtime.canvas).offset();this.mouseXcanvas = info.pageX - offset.left;this.mouseYcanvas = info.pageY - offset.top;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "pointerType must be mouse to make touch input work",
+            "key": "e.pointerType",
+            "value": "\"mouse\""
+        }
+    ],
+    "html": [],
+    "joiplay": [
+        {
+            "author": "joiplay",
+            "comment": "Disable FOSSIL script priority check",
+            "key": "$plugins[0].name!=='FOSSIL'",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Print errors to console instead of showing them to user",
+            "key": "Yanfly.Util.displayError(",
+            "value": "console.log("
+        },
+        {
+            "author": "joiplay",
+            "comment": "Disable wordwrap to fit quest description to maximum texture size",
+            "key": "fmt.match(/<(?:WordWrap)>/i)",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Some games do not come with fps meter",
+            "key": "this._createFPSMeter();",
+            "value": "try{this._createFPSMeter();}catch(e){}"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes save bug on Farmers Dream",
+            "key": "if (ConfigManager._lastSaveIndex[1] != null) {",
+            "value": "if (ConfigManager._lastSaveIndex != null || ConfigManager._lastSaveIndex[1] != null) {"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Define missing loadidset",
+            "key": "var configonFlg = false; //ロード表示",
+            "value": "var configonFlg = false; //ロード表示\nvar loadidset = 0;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Define missing SaveLoadMenuFlg",
+            "key": "var NupuAGActionFlg = false; //アクションパート時true;",
+            "value": "var NupuAGActionFlg = false; //アクションパート時true;\nvar SaveLoadMenuFlg = false;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "",
+            "key": "Utils.isPcChrome()",
+            "value": "true"
+        },
+        {
+            "author": "joiplay",
+            "comment": "$gameSwitches might be null",
+            "key": "|| $gameSwitches.value(133)",
+            "value": "|| ($gameSwitches && $gameSwitches.value(133))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Check this._bitmap before accessing it's members",
+            "key": "(this._frame.width === 0 && this._frame.height === 0)",
+            "value": "(this._frame.width === 0 && this._frame.height === 0 && this._bitmap)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix wrong LunaFonts parameter",
+            "key": "let parsedFonts = JsonEx.parse(params[\"fonts\"])",
+            "value": "let fjson = \"[]\"; if(params[\"fonts\"]){fjson = params[\"fonts\"];} let parsedFonts = JsonEx.parse(fjson)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Brython uses module.exports which does not work with default implementation so set isNode to false",
+            "key": "$B.isNode=(typeof process !=='undefined')&&(process.release.name==='node')",
+            "value": "$B.isNode=false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Return arrayBuffer instead of throwing the error.",
+            "key": "throw new Error(\"Header is wrong\");",
+            "value": "return arrayBuffer;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix video playback on MoviePicture plugin",
+            "key": "return Bitmap_Video;",
+            "value": "return Bitmap_DrawVideo;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Sex Ticket's events",
+            "key": "let NupuSetting_Sprite_LightUpdate = Sprite_Light.prototype.update;",
+            "value": ""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Sex Ticket's events",
+            "key": "Sprite_Light.prototype.update = function () {",
+            "value": "Sprite_LightUpdate = function () {"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes a bug on Saint Emiliana",
+            "key": "this.contents.context.font = this.contents._makeFontNameText();",
+            "value": "if(typeof this.contents._makeFontNameText == 'function' ) {this.contents.context.font = this.contents._makeFontNameText();} else {this.contents.context.font = '40px sans-serif'}"
+        }
+    ],
+    "renpy": [
+        {
+            "author": "joiplay",
+            "comment": "Fix argument order issue in Hero Party Must Fall",
+            "key": "label say_line(f = \"\", act):",
+            "value": "label say_line(f = \"\", act = \"\"):"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix argument order issue in Sweet Affection",
+            "key": "SDiary2(Relationship=0, Who=\"\", Who2, Level=1, Page=\"\", Choose=True)",
+            "value": "SDiary2(Relationship=0, Who=\"\", Who2=\"\", Level=1, Page=\"\", Choose=True)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix argument order issue in Sweet Affection",
+            "key": "Message(textNr=-1, who, level, timed)",
+            "value": "Message(textNr=-1, who=None, level=None, timed=None)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix wrong animation position in Hero Party Must Fall",
+            "key": " at pos_dotto",
+            "value": " at truecenter"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix wrong animation position in Hero Party Must Fall",
+            "key": "at_list=[pos_dotto]",
+            "value": "at_list=[truecenter]"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Prevent usage of WebGL2 on BabylonJS",
+            "key": "!n.disableWebGL2Support",
+            "value": "false"
+        }
+    ],
+    "rpgm": [
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：最大HP",
+            "key": "A_MHP = 999999",
+            "value": "A_MHP = 200000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：最大MP",
+            "key": "A_MMP = 99999",
+            "value": "A_MMP = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：攻击力",
+            "key": "A_ATK = 9999",
+            "value": "A_ATK = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：防御力",
+            "key": "A_DEF = 9999",
+            "value": "A_DEF = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：魔法力",
+            "key": "A_MAT = 9999",
+            "value": "A_MAT = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：魔法防御",
+            "key": "A_MDF = 9999",
+            "value": "A_MDF = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：敏捷性",
+            "key": "A_AGI = 9999",
+            "value": "A_AGI = 12000000"
+        },
+        {
+            "author": "dafeiyu",
+            "comment": "BS2 玩家上限（第一步）：运气",
+            "key": "A_LUK = 9999",
+            "value": "A_LUK = 12000000"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "UTF-16LE",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "Shift_JIS",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "SHIFT_JIS",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "US-ASCII",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "EUC-JP",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "CP932",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "Windows-31J",
+            "value": "UTF-8"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "Encoding::UTF_8",
+            "value": "\"UTF-8\""
+        },
+        {
+            "author": "joiplay",
+            "comment": "freeze causes issues on some scripts",
+            "key": ".freeze\n",
+            "value": "\n"
+        },
+        {
+            "author": "joiplay",
+            "comment": "freeze causes issues on some scripts",
+            "key": ".freeze ",
+            "value": " "
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix invalid multibyte escape on wf-input",
+            "key": "/\\x80|\\x81/",
+            "value": "/P|Q/"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Force screen keyboard on Pokemon Essentials games",
+            "key": "USEKEYBOARDTEXTENTRY = true",
+            "value": "USEKEYBOARDTEXTENTRY = false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Force screen keyboard on Pokemon Essentials games",
+            "key": "USEKEYBOARD=true",
+            "value": "USEKEYBOARD=false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Force screen keyboard on Pokemon Essentials games",
+            "key": "if USEKEYBOARDTEXTENTRY",
+            "value": "if false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Force screen keyboard on Pokemon Essentials games",
+            "key": "if ($PokemonSystem.textinput == 1 rescue false)",
+            "value": "if false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Define undefined B and C",
+            "key": "OK=-1",
+            "value": "OK=-1\nB=Input::B\nC=Input::C"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Run postload scripts after running loose scripts",
+            "key": "eval(code, nil, f)",
+            "value": "MKXP.run_postload(code)\n      eval(MKXP.apply_overrides(code), nil, f)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Run postload scripts after running loose scripts",
+            "key": "eval(script[3], nil, script[1])",
+            "value": "MKXP.run_postload(script[3])\neval(MKXP.apply_overrides(script[3]), nil, script[1])"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix bugs on some fullscreen scripts",
+            "key": "(2 ** (0.size * 8 - 2) - 1)",
+            "value": "4096"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix bugs on some fullscreen scripts",
+            "key": "mod = -> adr, val { DL::CPtr.new(base + adr)[0, val.size] = val }",
+            "value": "mod = -> adr, val {}"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Do not require fyxinput",
+            "key": "require 'fyxinput.so' ",
+            "value": ""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix for Empyrean's png export",
+            "key": "export_png(filename, &onFinish)",
+            "value": "export_png(filename, &onFinish)\nsave_to_file(filename)\nonFinish.call if block_given?\nreturn\n"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Pokemon Rejuvenation's script loader",
+            "key": "filepath = \"#{dir_path}/#{filename}.rb\".strip",
+            "value": "filepath = \"#{dir_path.strip}/#{filename.strip}.rb\".strip"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Pokemon Rejuvenation's script loader",
+            "key": "code = File.open(filepath, 'r') { |f| f.read }",
+            "value": "code = filename.include?(BLANK_SCRIPT_TAG) ? '' : File.open(filepath, 'r') { |f| f.read }\ncode = MKXP.apply_overrides(code)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Removes fake patch warning of P&C",
+            "key": "def self.check_hash(data)",
+            "value": "def self.check_hash(data)\n    return"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix for To The Moon",
+            "key": "$appPath = path.to_s + \"\\\\",
+            "value": "$appPath = path.to_s + \"/"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix for To The Moon",
+            "key": "$appPath + \"\\\\",
+            "value": "$appPath + \"/"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Pokemon Ecchi Version's bitmap export",
+            "key": "export_png(\"#{filename}.png\")",
+            "value": "save_to_file(\"#{filename}.png\")"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Pokemon Empire animation bug",
+            "key": "if $MKXP\r\n    animations = $pkmn_animations",
+            "value": "if $MKXP\n    animations = load_data(\"Data/PkmnAnimations.rxdata\")"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Comment out custom message window on B-bishop games",
+            "key": "### メッセージウィンドウの設定追加",
+            "value": "=begin"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Comment out custom message window on B-bishop games",
+            "key": "### タイトルメニュー追加",
+            "value": "=end"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Compile metadata on Pokemon Bushido",
+            "key": "pbCompiler\r\nif mkxp? && Bitmap.max_size < 0x4000",
+            "value": "$DEBUG = true\npbCompiler\r\nif mkxp? && Bitmap.max_size < 256"
+        },
+        {
+            "author": "joiplay",
+            "comment": "A Japanese game uses Win32Api for name input, bypass it by renaming override class",
+            "key": "# 　名字输入画面\r\n#==============================================================================\r\n\r\nclass Scene_Name < Scene_MenuBase",
+            "value": "class Scene_NameNew < Scene_MenuBase"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Disable H-mode7 usage",
+            "key": "$game_system.hm7 = map_data.full_name.include?(\"[HM7]\")",
+            "value": "$game_system.hm7 = false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents,@selarrow.bitmap,rect.x,rect.y)",
+            "value": "pbCopyBitmap(self.contents,@selarrow.bitmap,rect.x,rect.y,127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents,bmp,rect.x,rect.y+2)",
+            "value": "pbCopyBitmap(self.contents,bmp,rect.x,rect.y+2,127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents, bmp, rect.x, rect.y + 2)",
+            "value": "pbCopyBitmap(self.contents, bmp, rect.x, rect.y + 2, 127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents,selarrow.bitmap,rect.x,rect.y)",
+            "value": "pbCopyBitmap(self.contents,selarrow.bitmap,rect.x,rect.y,127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents, bmp, rect.x, rect.y + 2)",
+            "value": "pbCopyBitmap(self.contents, bmp, rect.x, rect.y + 2,127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Makes cursor semi-transparent on Pokemon Essentials games",
+            "key": "pbCopyBitmap(self.contents,bmp,rect.x,rect.y+2 + ((mkxp? && $PokemonSystem.font == 0) ? -3 : 0))",
+            "value": "pbCopyBitmap(self.contents,bmp,rect.x,rect.y+2 + ((mkxp? && $PokemonSystem.font == 0) ? -3 : 0), 127)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "script yeetifier fix",
+            "key": "code = File.open(\"#{dir_path}/#{filename}.rb\", 'r') { |f| f.read }",
+            "value": "begin\n            code = File.open(\"#{dir_path}/#{filename}.rb\", 'r') { |f| f.read }\n          rescue\n          code = File.open(\"#{dir_path.strip}/#{filename.strip}.rb\", 'r') { |f| f.read }\n          end"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Disable GaryCXJk - InpEx v1.00",
+            "key": "CXJ::INPEX::HOOK_KEYBOARD_TO_INPUT || CXJ::INPEX::HOOK_GAMEPAD_TO_INPUT",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Save fix for games from Aldorlea Games",
+            "key": "\\#{GAME_NAME}_Saves",
+            "value": "/#{GAME_NAME}_Saves"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Save fix for games from Aldorlea Games",
+            "key": "$appPath = path.to_s",
+            "value": "$appPath = path.to_s #"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Save fix for games from Aldorlea Games",
+            "key": "(version =~ System::VERSION_PATTERN).nil?",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Save fix for games from Aldorlea Games",
+            "key": "return 0 unless defined?(TCrypt)",
+            "value": "return 0"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Bypass encryption check for games from Aldorlea Games",
+            "key": "$scene = nil if security",
+            "value": "security"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix mkxp check on Symphony of War",
+            "key": "MKXP_ENABLED = !defined?(Win32API)",
+            "value": "MKXP_ENABLED = true"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix mkxp check on Symphony of War",
+            "key": "@raw_key_states = MKXP.raw_key_states.bytes",
+            "value": "@raw_key_states = MKXP.raw_key_states.each_byte.to_a"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes encoding exception on Servant Valkyrie",
+            "key": "GAME_TITLE  = load_data(\"Data/System.rvdata2\").game_title.encode('SHIFT_JIS')",
+            "value": "GAME_TITLE  = \"\""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes encoding exception on Servant Valkyrie",
+            "key": "load_data(\"Data/System.rvdata2\").game_title",
+            "value": "\"\""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes Dark Hero Party's menu crash",
+            "key": "text.push(data[1].to_s.scan(/{(\\S+)}/)[0][0].to_s)",
+            "value": "return"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix incorrect regex",
+            "key": "/\\\\[Ii][Mm][Gg]\\[(.+*)\\]/",
+            "value": "/\\\\[Ii][Mm][Gg]\\[(.+)*\\]/"
+        },
+        {
+            "author": "joiplay",
+            "comment": "EasyConv uses MultiByteToWideChar and WideCharToMultiByte which don't work",
+            "key": "EasyConv.s2u(file.read)",
+            "value": "file.read"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix screenshot bug in Legionwood",
+            "key": "@screen.call(0, 0, Graphics.width, Graphics.height, filename, self.handel,\r\n    typid)",
+            "value": "Graphics.screenshot(filename)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix text rendering issue in Ideology in Friction's game menu",
+            "key": "result.gsub!(/<%(.*?)%>/)     { eval($1) }",
+            "value": "result.gsub!(/<%(.*?)%>/)     { eval($1); '' }"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Disable Steam Mode",
+            "key": "if STEAM_MODE",
+            "value": "if false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix LonaRPG's file sorting",
+            "key": "#讓檔案按照檔名理的數字排序",
+            "value": "#讓檔案按照檔名理的數字排序\n    fileList = fileList.sort"
+        },
+        {
+            "author": "joiplay",
+            "comment": "JSON Encoder/Decoder by game_guy doesn't handle \r",
+            "key": "when ' ', \"\\n\", \"\\t\"",
+            "value": "when ' ', \"\\n\", \"\\t\", \"\\r\""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply overrides to LonaRPG scripts",
+            "key": "    script  = use_alternative ? File.read(path) : File.open(path,'rb',&:read)\r\n    eval(script)",
+            "value": "    script  = use_alternative ? File.read(path) : File.open(path,'rb',&:read)\r\n    eval(MKXP.apply_overrides(script))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Autoskip LonaRPG's warning screen after ~3 seconds.",
+            "key": "\t\t\tcreate_warning_posters",
+            "value": "\t\t\tcreate_warning_posters; update; Graphics.freeze(120); SceneManager.goto(Scene_MapTitle)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "There is a bug that cause crashes when Game_Mouse.objectParams? used in Pokemon Realidea System. Temporary workaround",
+            "key": "defined?($mouse)",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes a syntax issue in Quest Journal script",
+            "key": "quest (id).send (method, *obj)",
+            "value": "quest(id).send(method, *obj)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply patches to script events",
+            "key": "[regex]\\beval\\(script\\)",
+            "value": "eval(MKXP.apply_overrides(script))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply patches to script events in conditional branches on XP",
+            "key": "result = eval(@parameters[1])",
+            "value": "result = eval(MKXP.apply_overrides(@parameters[1]))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply patches to script events in conditional branches on VX and VX Ace",
+            "key": "result = eval(@params[1])",
+            "value": "result = eval(MKXP.apply_overrides(@params[1]))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply patches to script events in custom move type on XP, VX",
+            "key": "result = eval(command.parameters[0])",
+            "value": "result = eval(MKXP.apply_overrides(command.parameters[0]))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply patches to script move command on VX Ace",
+            "key": "eval(params[0])",
+            "value": "eval(MKXP.apply_overrides(params[0]))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Apply overrides to control variables on VX Ace",
+            "key": "value = eval(@params[4])",
+            "value": "value = eval(MKXP.apply_overrides(@params[4]))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Blacklist Cable Club plugin for Pokemon Essentials",
+            "key": "name, meta, script = plugin",
+            "value": "name, meta, script = plugin\nblacklist = ['Cablera Club']\nnext if blacklist.include?(name)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes a crash caused by nil value in Skill Tree System ver1.02 by TOMMO",
+            "key": "tree[:tree][start_y]",
+            "value": "sk = tree[:tree][start_y]\n next if sk.nil?\nsk"
+        },
+        {
+            "author": "joiplay",
+            "comment": "zlib is already imported",
+            "key": "require 'zlib'",
+            "value": ""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Patch Pokemon Desolation script loader",
+            "key": "eval(f.read)",
+            "value": "eval(MKXP.apply_overrides(f.read))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Patch Pokemon Desolation script loader",
+            "key": "eval(script[3], nil, script[1])",
+            "value": "eval(MKXP.apply_overrides(script[3]), nil, script[1])"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes lags when bag opened",
+            "key": "[regex]if item==0\\s+bitmapFileName=",
+            "value": "if item <= 0\nbitmapFileName="
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes crash caused by Mouse Input script, also makes it unfunctional",
+            "key": "w = (object.width) if object.respond_to?(:width)",
+            "value": ""
+        },
+	    {
+            "author": "joiplay",
+            "comment": "Fixes crash caused by Mouse Input script, also makes it unfunctional",
+            "key": "h = (object.height) if object.respond_to?(:height)",
+            "value": ""
+        },
+        {
+            "author": "joiplay",
+            "comment": "SoW detects our fork as mkxp-z",
+            "key": "MKXP_Z_ENABLED = MKXP_ENABLED && defined?(Win32API)",
+            "value": "MKXP_Z_ENABLED = false"
+        },
+	    {
+	        "author": "joiplay",
+	        "comment": "Replace Dir.pwd with empty string",
+	        "key": "Dir.pwd",
+	        "value": "\"\""
+	    },
+        {
+	        "author": "joiplay",
+	        "comment": "dont require socket",
+	        "key": "require \"socket\"",
+	        "value": ""
+	    },
+        {
+            "author": "[ g f y ]",
+            "comment": "Time is now measured in fractions of a second, not microseconds",
+            "key": "self.delta.to_f / 1_000_000",
+            "value": "self.delta"
+        },
+        {
+            "author": "[ g f y ]",
+            "comment": "Patch Plugin Manager script loader",
+            "key": "eval(code, TOPLEVEL_BINDING, fname)",
+            "value": "eval(MKXP.apply_overrides(code), TOPLEVEL_BINDING, fname)"
+        },
+        {
+            "author": "[ g f y ]",
+            "comment": "Replace other encodings with UTF-8",
+            "key": "ISO-8859-1",
+            "value": "UTF-8"
+        }
+    ],
+    "rpgmmv": [
+        {
+            "author": "joiplay",
+            "comment": "Disable FOSSIL script priority check",
+            "key": "$plugins[0].name!=='FOSSIL'",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Print errors to console instead of showing them to user",
+            "key": "Yanfly.Util.displayError(",
+            "value": "console.log("
+        },
+        {
+            "author": "joiplay",
+            "comment": "Disable wordwrap to fit quest description to maximum texture size",
+            "key": "fmt.match(/<(?:WordWrap)>/i)",
+            "value": "false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Some games do not come with fps meter",
+            "key": "this._createFPSMeter();",
+            "value": "try{this._createFPSMeter();}catch(e){}"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes save bug on Farmers Dream",
+            "key": "if (ConfigManager._lastSaveIndex[1] != null) {",
+            "value": "if (ConfigManager._lastSaveIndex != null || ConfigManager._lastSaveIndex[1] != null) {"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Define missing loadidset",
+            "key": "var configonFlg = false; //ロード表示",
+            "value": "var configonFlg = false; //ロード表示\nvar loadidset = 0;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Define missing SaveLoadMenuFlg",
+            "key": "var NupuAGActionFlg = false; //アクションパート時true;",
+            "value": "var NupuAGActionFlg = false; //アクションパート時true;\nvar SaveLoadMenuFlg = false;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Pretend as PC Chrome",
+            "key": "Utils.isPcChrome()",
+            "value": "true"
+        },
+        {
+            "author": "joiplay",
+            "comment": "$gameSwitches might be null",
+            "key": "|| $gameSwitches.value(133)",
+            "value": "|| ($gameSwitches && $gameSwitches.value(133))"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Check this._bitmap before accessing it's members",
+            "key": "(this._frame.width === 0 && this._frame.height === 0)",
+            "value": "(this._frame.width === 0 && this._frame.height === 0 && this._bitmap)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix wrong LunaFonts parameter",
+            "key": "let parsedFonts = JsonEx.parse(params[\"fonts\"])",
+            "value": "let fjson = \"[]\"; if(params[\"fonts\"]){fjson = params[\"fonts\"];} let parsedFonts = JsonEx.parse(fjson)"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Brython uses module.exports which does not work with default implementation so set isNode to false",
+            "key": "$B.isNode=(typeof process !=='undefined')&&(process.release.name==='node')",
+            "value": "$B.isNode=false"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Return arrayBuffer instead of throwing the error.",
+            "key": "throw new Error(\"Header is wrong\");",
+            "value": "return arrayBuffer;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix video playback on MoviePicture plugin",
+            "key": "return Bitmap_Video;",
+            "value": "return Bitmap_DrawVideo;"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Sex Ticket's events",
+            "key": "let NupuSetting_Sprite_LightUpdate = Sprite_Light.prototype.update;",
+            "value": ""
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fix Sex Ticket's events",
+            "key": "Sprite_Light.prototype.update = function () {",
+            "value": "Sprite_LightUpdate = function () {"
+        },
+        {
+            "author": "joiplay",
+            "comment": "Fixes a bug on Saint Emiliana",
+            "key": "this.contents.context.font = this.contents._makeFontNameText();",
+            "value": "if(typeof this.contents._makeFontNameText == 'function' ) {this.contents.context.font = this.contents._makeFontNameText();} else {this.contents.context.font = '40px sans-serif'}"
+        }
+    ],
+    "rpgmmz": [],
+    "tyrano": []
+}
