@@ -492,13 +492,26 @@ class Handler(BaseHTTPRequestHandler):
         abs_file = os.path.join(abs_dir, name)
         cam = str(body.get("camera") or 0)
         code, out, err = run_cmd(["termux-camera-photo", "-c", cam, abs_file], timeout=45)
-        ok = code == 0 and os.path.isfile(abs_file)
-        if ok:
-            media_scan(abs_file)
-        self._json(200 if ok else 500, {
-            "ok": ok, "code": code, "path": posixpath.join(norm_dir, name) if ok else None,
-            "stdout": out, "stderr": err,
-        })
+        size = os.path.getsize(abs_file) if os.path.isfile(abs_file) else 0
+        # 实测（Android 10）：权限没给 / Termux 不在前台时，命令照样退 0，但文件是 0 字节。
+        # 所以这里必须看体积，不能只看退出码。
+        ok = code == 0 and size > 1024
+        if not ok:
+            if size and size <= 1024 and os.path.isfile(abs_file):
+                try:
+                    os.unlink(abs_file)      # 0 字节空壳是我们自己刚建的，清掉不留垃圾
+                except OSError:
+                    pass
+            self._json(500, {
+                "ok": False, "code": code, "size": size,
+                "error": "拍照没出内容（%d 字节）。常见原因：Termux:API 没给相机权限 / Termux 不在前台 / 相机被别的 App 占着。"
+                         "先手动验一次：termux-camera-photo -c 0 /sdcard/DCIM/大肥鱼/手动.jpg" % size,
+                "stdout": out, "stderr": err,
+            })
+            return
+        media_scan(abs_file)
+        self._json(200, {"ok": True, "code": code, "path": posixpath.join(norm_dir, name),
+                         "size": size, "stdout": out, "stderr": err})
 
     def _scan(self, body):
         abs_path, norm = resolve(str(body.get("path") or ""))
