@@ -6,9 +6,9 @@
 
   1. **只读文件服务**：目录列表 / `HEAD` 的 Last-Modified、Content-Length / 404 文案
      都照抄 v1 那套 `python -m http.server` 的输出，所以沙箱里的
-     `运维工具/手机文件.sh` 一个字都不用改就能继续用。
+     `运维工具/手机桥/手机文件.sh` 一个字都不用改就能继续用。
   2. **白名单执行层**（`/api/*` JSON 接口）：往手机写文件、弹通知、打开网址或文件、
-     拍照、执行 termux-* 命令。沙箱侧入口是 `运维工具/手机控制.sh`。
+     拍照、执行 termux-* 命令。沙箱侧入口是 `运维工具/手机桥/手机控制.sh`。
 
 边界（全部由本文件兜底，不靠调用方自觉）
   · 只绑 127.0.0.1 —— 同 WiFi 的别人访问不到，能连的只有手机上的本机进程
@@ -23,7 +23,7 @@
     python ~/phone_server.py --allow-risky           # 放开短信/拨号等危险命令（慎用）
     python ~/phone_server.py --overwrite             # 允许覆盖同名文件（默认只新建）
 
-接口（沙箱侧不直接手敲，看 运维工具/手机控制.sh）
+接口（沙箱侧不直接手敲，看 运维工具/手机桥/手机控制.sh）
     GET  /api/status                     桥与执行器能力清单
     GET  /api/probe                      真跑一次 termux-battery-status，验证 Termux:API 通不通
     POST /api/write?path=&overwrite=&scan=   裸字节写入（body 就是文件内容）
@@ -33,9 +33,17 @@
     POST /api/pick     {"dir","name"}    手机上弹选择器，收一个文件进来
     POST /api/scan     {"path"}          让相册/媒体库看见
     POST /api/run      {"argv":[...],"timeout"}   白名单命令，返回 stdout/stderr/退出码
+
+B 档（无障碍脚本）——桥当邮局，手机上跑的 AutoJs6 脚本当跑腿的：
+    POST /api/ui/cmd     {"kind":...}            投一条界面指令（toast/screen/tap/input/key/app/wait/ping/stop）
+    GET  /api/ui/next?wait=20                    跑腿脚本长轮询取活（顺带报自己看到的包名/Activity）
+    POST /api/ui/result  {"id","ok","data"}      跑腿脚本回执
+    GET  /api/ui/wait?id=&timeout=               沙箱这边等回执（取一次就丢，不攒）
+    GET  /api/ui/status                          脚本是否在线、队列里还有几条
 """
 
 import argparse
+import collections
 import html
 import json
 import mimetypes
@@ -45,6 +53,7 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import urllib.parse
 from email.utils import formatdate
@@ -81,6 +90,20 @@ ALLOW_OVERWRITE = False
 MAX_WRITE = 512 * 1024 * 1024  # 单次写入上限 512 MB
 MAX_OUTPUT = 1 * 1024 * 1024   # 命令输出回传上限 1 MB
 STARTED = time.time()
+
+# ── B 档：界面指令队列（跑腿脚本每 ~20s 长轮询一次，所以 30s 没动静就算掉线）──
+UI_KINDS = ("toast", "screen", "tap", "input", "key", "app", "wait", "ping", "stop")
+UI_STALE = 30.0
+UI_LOCK = threading.Condition()
+UI = {
+    "queue": collections.deque(),
+    "results": {},        # id -> 回执（沙箱取走即删）
+    "seq": 0,
+    "client_seen": 0.0,   # 跑腿脚本最后一次露面的时间
+    "taken": 0,
+    "done": 0,
+}
+LOGSTATE = {"ui_hb": 0.0}
 
 
 class BridgeError(Exception):
@@ -233,7 +256,18 @@ class Handler(BaseHTTPRequestHandler):
         self._send(code, body, "text/html; charset=utf-8")
 
     def log_message(self, fmt, *args):
-        sys.stdout.write("[%s] %s\n" % (time.strftime("%H:%M:%S"), fmt % args))
+        msg = fmt % args
+        if "/api/ui/next" in msg:
+            # 长轮询每 20s 一条，逐条刷屏没意义：改成每分钟报一次心跳
+            if time.time() - LOGSTATE["ui_hb"] > 60:
+                LOGSTATE["ui_hb"] = time.time()
+                with UI_LOCK:
+                    seen = UI["client_seen"]
+                sys.stdout.write("[%s] [ui] 跑腿脚本在轮询（最近 %ss 前露过面）\n"
+                                 % (time.strftime("%H:%M:%S"), round(time.time() - seen, 1) if seen else "?"))
+                sys.stdout.flush()
+            return
+        sys.stdout.write("[%s] %s\n" % (time.strftime("%H:%M:%S"), msg))
         sys.stdout.flush()
 
     def _body_json(self, limit=1024 * 1024):
@@ -349,6 +383,12 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(200, self._probe())
         if path == "/api/write" and not get:
             return self._write()
+        if path == "/api/ui/next" and get:
+            return self._ui_next(self._query())
+        if path == "/api/ui/wait" and get:
+            return self._ui_wait(self._query())
+        if path == "/api/ui/status" and get:
+            return self._ui_status()
         if not get:
             body = self._body_json()
             if path == "/api/notify":
@@ -363,6 +403,10 @@ class Handler(BaseHTTPRequestHandler):
                 return self._pick(body)
             if path == "/api/run":
                 return self._run(body)
+            if path == "/api/ui/cmd":
+                return self._ui_cmd(body)
+            if path == "/api/ui/result":
+                return self._ui_result(body)
         raise BridgeError(404, "没有这个接口：%s" % path)
 
     def _status(self):
@@ -555,6 +599,96 @@ class Handler(BaseHTTPRequestHandler):
         argv = body.get("argv")
         code, out, err = run_cmd(argv, timeout=body.get("timeout") or 30, stdin=body.get("input"))
         self._json(200, {"ok": code == 0, "code": code, "stdout": out, "stderr": err})
+
+    # ---- B 档：界面指令队列 ----
+    def _ui_alive(self):
+        """跑腿脚本还算在线吗（它每 ~20s 长轮询一次，30s 没动静就判掉线）。"""
+        with UI_LOCK:
+            seen = UI["client_seen"]
+        return bool(seen) and (time.time() - seen) < UI_STALE
+
+    def _ui_cmd(self, body):
+        kind = str(body.get("kind") or "").strip()
+        if kind not in UI_KINDS:
+            raise BridgeError(400, "不认识的界面指令：%s（可用：%s）" % (kind, "、".join(UI_KINDS)))
+        if not self._ui_alive():
+            # 没人在听就别投，免得堆一条陈年指令等着以后被误执行
+            with UI_LOCK:
+                seen = UI["client_seen"]
+            raise BridgeError(503, "跑腿脚本没在跑：先在手机上用 AutoJs6 打开 autojs_worker.js 并点运行"
+                                   "（它每 20s 来取一次活）%s"
+                                   % ("；上次露面 %.0fs 前" % (time.time() - seen) if seen else ""))
+        with UI_LOCK:
+            UI["seq"] += 1
+            cmd = {"id": UI["seq"]}
+            cmd.update(body)
+            cmd["kind"] = kind
+            UI["queue"].append(cmd)
+            pending = len(UI["queue"])
+            UI_LOCK.notify_all()
+        self._json(200, {"ok": True, "id": cmd["id"], "pending": pending})
+
+    def _ui_next(self, q):
+        """跑腿脚本长轮询取活。顺便报一下它此刻看到的包名/Activity（只作参考，不作判断）。"""
+        try:
+            wait = max(0.0, min(float(q.get("wait", ["20"])[0]), 60.0))
+        except ValueError:
+            wait = 20.0
+        with UI_LOCK:
+            UI["client_seen"] = time.time()
+        deadline = time.time() + wait
+        cmd = None
+        while True:
+            with UI_LOCK:
+                UI["client_seen"] = time.time()
+                if UI["queue"]:
+                    cmd = UI["queue"].popleft()
+                    UI["taken"] += 1
+                    break
+                left = deadline - time.time()
+                if left <= 0:
+                    break
+                UI_LOCK.wait(min(0.5, left))
+        self._json(200, {"ok": True, "cmd": cmd, "ts": int(time.time())})
+
+    def _ui_result(self, body):
+        try:
+            cid = int(body.get("id") or 0)
+        except (TypeError, ValueError):
+            raise BridgeError(400, "id 不合法")
+        with UI_LOCK:
+            UI["results"][cid] = {"id": cid, "ok": bool(body.get("ok")),
+                                  "data": body.get("data"), "error": body.get("error"),
+                                  "ts": time.time()}
+            UI["done"] += 1
+            while len(UI["results"]) > 50:      # 没人取的旧回执别攒着
+                UI["results"].pop(min(UI["results"]), None)
+            UI_LOCK.notify_all()
+        self._json(200, {"ok": True})
+
+    def _ui_wait(self, q):
+        try:
+            cid = int(q.get("id", ["0"])[0])
+            t = max(1.0, min(float(q.get("timeout", ["30"])[0]), 120.0))
+        except ValueError:
+            raise BridgeError(400, "id/timeout 不合法")
+        deadline = time.time() + t
+        with UI_LOCK:
+            while cid not in UI["results"] and time.time() < deadline:
+                UI_LOCK.wait(min(0.5, max(0.0, deadline - time.time())))
+            got = UI["results"].pop(cid, None)
+        if not got:
+            raise BridgeError(504, "等界面指令回执超时（%ds）：脚本可能没在跑、或卡在那条指令上" % int(t))
+        got["ok"] = bool(got.get("ok"))
+        self._json(200, got)
+
+    def _ui_status(self):
+        with UI_LOCK:
+            seen = UI["client_seen"]
+            data = {"ok": True, "alive": self._ui_alive(),
+                    "client_seen_s": round(time.time() - seen, 1) if seen else None,
+                    "pending": len(UI["queue"]), "taken": UI["taken"], "done": UI["done"]}
+        self._json(200, data)
 
 
 def main():
